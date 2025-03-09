@@ -1,0 +1,3 @@
+D:/apps/labi/2sem/cmake-build-debug/CMakeFiles/2sem.dir
+D:/apps/labi/2sem/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/apps/labi/2sem/cmake-build-debug/CMakeFiles/rebuild_cache.dir
