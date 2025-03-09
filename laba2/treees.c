@@ -132,13 +132,66 @@ int main() {
     addchild(child4, child13);
     addchild(child13, child14);
 
-    printf("Original tree:\n");
-    printtree(root, 0);
+    int choice, parent_val, child_val, del_val;
 
-    deletetree(root, 4);
+    while(1) {
+        printf("\n--- Tree Operations Menu ---\n");
+        printf("1. Add child to parent node\n");
+        printf("2. Print tree\n");
+        printf("3. Delete branch\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
 
-    printf("\nTree after deleting node 4:\n");
-    printtree(root, 0);
+        switch(choice) {
+            case 1:
+                printf("Enter parent value: ");
+                scanf("%d", &parent_val);
+                printf("Enter child value: ");
+                scanf("%d", &child_val);
+                
+                treenode* parent = search(root, parent_val);
+                if(parent) {
+                    if(parent->childcount < 10) {
+                        treenode* new_child = createnode(child_val);
+                        addchild(parent, new_child);
+                        printf("Child %d added to parent %d\n", child_val, parent_val);
+                    } else {
+                        printf("Parent already has maximum children!\n");
+                    }
+                } else {
+                    printf("Parent not found!\n");
+                }
+                break;
 
+            case 2:
+                printf("\nCurrent Tree Structure:");
+                printtree(root, 0);
+                break;
+
+            case 3:
+                printf("Enter value to delete: ");
+                scanf("%d", &del_val);
+                if(del_val == root->value) {
+                    printf("Cannot delete root node!\n");
+                    break;
+                }
+                if(search(root, del_val)) {
+                    deletetree(root, del_val);
+                    printf("Branch %d deleted successfully\n", del_val);
+                } else {
+                    printf("Node not found!\n");
+                }
+                break;
+
+            case 4:
+                freeSubtree(root);
+                printf("Tree deleted. Exiting...\n");
+                exit(0);
+
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+    }
     return 0;
 }
