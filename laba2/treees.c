@@ -99,6 +99,16 @@ void printtree(treenode* root, int level) {
         }
     }
 }
+int degree(treenode *root) {
+    int max_degree = root->childcount;
+    if (root == NULL) return 0;
+    for (int i = 0; i < root->childcount; i++){
+        int child_degree = degree(root->children[i]);
+        if (child_degree > max_degree) max_degree = child_degree;
+    }
+    return max_degree;
+}
+
 
 int main() {
     treenode *root = createnode(1);
@@ -139,7 +149,8 @@ int main() {
         printf("1. Add child to parent node\n");
         printf("2. Print tree\n");
         printf("3. Delete branch\n");
-        printf("4. Exit\n");
+        printf("4. tree degree\n");
+        printf("5. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -183,11 +194,14 @@ int main() {
                     printf("Node not found!\n");
                 }
                 break;
-
             case 4:
+                printf("Maximum degree of the tree: %d\n", degree(root));
+                break;
+            case 5:
                 freeSubtree(root);
                 printf("Tree deleted. Exiting...\n");
                 exit(0);
+
 
             default:
                 printf("Invalid choice! Try again.\n");
