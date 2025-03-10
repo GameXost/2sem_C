@@ -114,33 +114,20 @@ int main() {
     treenode *root = createnode(1);
     treenode *child1 = createnode(2);
     treenode *child2 = createnode(3);
-    treenode *child3 = createnode(4);
     treenode *child4 = createnode(5);
     treenode *child5 = createnode(6);
     treenode *child6 = createnode(7);
     treenode *child7 = createnode(8);
     treenode *child8 = createnode(9);
-    treenode *child9 = createnode(10);
-    treenode *child10 = createnode(11);
-    treenode *child11 = createnode(12);
-    treenode *child12 = createnode(13);
-    treenode *child13 = createnode(14);
-    treenode *child14 = createnode(15);
 
     addchild(root, child1);
     addchild(root, child2);
-    addchild(root, child3);
     addchild(child1, child4);
     addchild(child1, child5);
     addchild(child1, child6);
     addchild(child2, child7);
     addchild(child2, child8);
-    addchild(child2, child9);
-    addchild(child3, child10);
-    addchild(child3, child11);
-    addchild(child4, child12);
-    addchild(child4, child13);
-    addchild(child13, child14);
+ 
 
     int choice, parent_val, child_val, del_val;
 
