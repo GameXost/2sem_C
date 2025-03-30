@@ -12,6 +12,7 @@ void print_menu() {
     printf("6. Удалить элемент по индексу\n");
     printf("7. Вывести список\n");
     printf("8. Вывести размер списка\n");
+    printf("9. Отсортировать список\n");
     printf("0. Выход\n");
     printf("Выберите действие: ");
 }
@@ -59,7 +60,7 @@ int main() {
                 printf("Размер списка: %zu\n", list_size(&list));
                 break;
             case 9:
-            printf("9. Отсортировать список по возрастанию:\n");
+            	printf("9. Отсортировать список по возрастанию:\n");
                 list_insertion_sort(&list);
                 break;
             case 0:
