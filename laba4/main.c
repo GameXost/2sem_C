@@ -18,9 +18,11 @@ void print_menu() {
 }
 
 int main() {
-    SinglyLinkedList list;
-    list_create(&list);
-    int choice, value, index;
+    ArrayList list;
+    list_create(&list, 4);  // Начальная вместимость
+
+    int choice, key, value;
+    size_t index;  // index типа size_t для обеспечения корректности индекса
 
     while (1) {
         print_menu();
@@ -28,15 +30,14 @@ int main() {
 
         switch (choice) {
             case 1:
-                printf("Введите значение: ");
-                scanf("%d", &value);
-                list_push_front(&list, value);
+                printf("Введите ключ и значение: ");
+                scanf("%d %d", &key, &value);
+                list_push_front(&list, key, value);
                 break;
             case 2:
-                printf("Введите значение: ");
-                scanf("%d", &value);
-                list_push_back(&list, value);
-                break;
+                printf("Введите ключ и значение: ");
+                scanf("%d %d", &key, &value);
+                list_push_back(&list, key);
             case 3:
                 list_pop_front(&list);
                 break;
@@ -44,14 +45,22 @@ int main() {
                 list_pop_back(&list);
                 break;
             case 5:
-                printf("Введите индекс и значение: ");
-                scanf("%d %d", &index, &value);
-                list_insert(&list, index, value);
+                printf("Введите индекс, ключ и значение: ");
+                scanf("%zu %d %d", &index, &key, &value);  // %zu для size_t
+                if (index > list_size(&list)) {  // index не должен превышать текущий размер списка
+                    printf("Ошибка: некорректный индекс!\n");
+                } else {
+                    list_insert(&list, index, key, value);
+                }
                 break;
             case 6:
                 printf("Введите индекс: ");
-                scanf("%d", &index);
-                list_erase(&list, index);
+                scanf("%zu", &index);  // %zu для size_t
+                if (index >= list_size(&list)) {
+                    printf("Ошибка: некорректный индекс!\n");
+                } else {
+                    list_erase(&list, index);
+                }
                 break;
             case 7:
                 list_print(&list);
@@ -60,10 +69,9 @@ int main() {
                 printf("Размер списка: %zu\n", list_size(&list));
                 break;
             case 9:
-            	printf("9. Отсортировать список по возрастанию:\n");
-                list_insertion_sort(&list);
-                break;
+
             case 0:
+                list_destroy(&list);
                 return 0;
             default:
                 printf("Некорректный ввод, попробуйте снова.\n");

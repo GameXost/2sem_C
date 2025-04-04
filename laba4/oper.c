@@ -1,158 +1,116 @@
-#include "linked_list.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "linked_list.h"
 
-// Инициализация списка
-void list_create(SinglyLinkedList *list) {
-    list->head = NULL;
+
+
+void udt_create(udt *list){
+    list->head = -1;
+    list->free_head = 0;
+    list->size = 0;
+
+    for (int i = 0; i < MAX_CAPACITY - 1; i++){
+        list->nodes[i].next = i + 1;
+    }
+    list->nodes[MAX_CAPACITY - 1].next = -1;
 }
 
-// Проверка, пуст ли список
-bool list_is_empty(const SinglyLinkedList *list) {
-    return list->head == NULL;
+
+bool is_empty(udt *list){
+    return list->size == 0;
 }
 
-// Добавление элемента в начало
-void list_push_front(SinglyLinkedList *list, int value) {
-    Node *new_node = (Node *)malloc(sizeof(Node));
-    if (!new_node) return;
-    new_node->data = value;
-    new_node->next = list->head;
-    list->head = new_node;
-}
-
-// Добавление элемента в конец
-void list_push_back(SinglyLinkedList *list, int value) {
-    Node *new_node = (Node *)malloc(sizeof(Node));
-    if (!new_node) return;
-    new_node->data = value;
-    new_node->next = NULL;
-    
-    if (list_is_empty(list)) {
-        list->head = new_node;
+void udt_push_front(udt *list, data_type data){
+    if (list->size == MAX_CAPACITY){
         return;
     }
-    
-    Node *temp = list->head;
-    while (temp->next) {
-        temp = temp->next;
-    }
-    temp->next = new_node;
+
+    int index = list->free_head;
+    list->free_head = list->nodes[index].next;  // сдвигаем индекс на следующий
+
+    list->nodes[index].data = data;
+    list->nodes[index].next = list->head;
+    list->head = index;
+    list->size++;
 }
 
-// Удаление первого элемента
-void list_pop_front(SinglyLinkedList *list) {
-    if (list_is_empty(list)) return;
-    Node *temp = list->head;
-    list->head = temp->next;
-    free(temp);
+// Удаление из начала
+void udt_pop_front(udt *list) {
+    if (udt_is_empty(list)) return;
+
+    int old_head = list->head;
+    list->head = list->nodes[old_head].next;
+
+    // Возврат элемента в список свободных
+    list->nodes[old_head].next = list->free_head;
+    list->free_head = old_head;
+    list->size--;
 }
 
-// Удаление последнего элемента
-void list_pop_back(SinglyLinkedList *list) {
-    if (list_is_empty(list)) return;
-    
-    if (!list->head->next) {
-        free(list->head);
-        list->head = NULL;
-        return;
-    }
-    
-    Node *temp = list->head;
-    while (temp->next->next) {
-        temp = temp->next;
-    }
-    free(temp->next);
-    temp->next = NULL;
-}
+// Добавление в конец
+void udt_push_back(udt *list, data_type data) {
+    if (list->free_head == -1) return;
 
-// Вывод списка
-void list_print(const SinglyLinkedList *list) {
-    Node *temp = list->head;
-    while (temp) {
-        printf("%d -> ", temp->data);
-        temp = temp->next;
-    }
-    printf("NULL\n");
-}
+    int new_index = list->free_head;
+    list->free_head = list->nodes[new_index].next;
 
-// Получение размера списка
-size_t list_size(const SinglyLinkedList *list) {
-    size_t count = 0;
-    Node *temp = list->head;
-    while (temp) {
-        count++;
-        temp = temp->next;
-    }
-    return count;
-}
+    list->nodes[new_index].data = data;
+    list->nodes[new_index].next = -1;
 
-// Вставка элемента по индексу
-void list_insert(SinglyLinkedList *list, size_t index, int value) {
-    if (index == 0) {
-        list_push_front(list, value);
-        return;
-    }
-    
-    Node *temp = list->head;
-    for (size_t i = 0; temp && i < index - 1; i++) {
-        temp = temp->next;
-    }
-    
-    if (!temp) return;
-    
-    Node *new_node = (Node *)malloc(sizeof(Node));
-    if (!new_node) return;
-    new_node->data = value;
-    new_node->next = temp->next;
-    temp->next = new_node;
-}
-
-// Удаление элемента по индексу
-void list_erase(SinglyLinkedList *list, size_t index) {
-    if (list_is_empty(list)) return;
-    
-    if (index == 0) {
-        list_pop_front(list);
-        return;
-    }
-    
-    Node *temp = list->head;
-    for (size_t i = 0; temp->next && i < index - 1; i++) {
-        temp = temp->next;
-    }
-    
-    if (!temp->next) return;
-    
-    Node *to_delete = temp->next;
-    temp->next = to_delete->next;
-    free(to_delete);
-}
-
-// Сортировка списка вставками
-void list_insertion_sort(SinglyLinkedList *list) {
-    if (!list->head || !list->head->next) return;
-    
-    Node *sorted = NULL;
-    Node *current = list->head;
-    
-    while (current) {
-        Node *next = current->next;
-        
-        if (!sorted || sorted->data >= current->data) {
-            current->next = sorted;
-            sorted = current;
-        } else {
-            Node *temp = sorted;
-            while (temp->next && temp->next->data < current->data) {
-                temp = temp->next;
-            }
-            current->next = temp->next;
-            temp->next = current;
+    if (udt_is_empty(list)) {
+        list->head = new_index;
+    } else {
+        // Поиск последнего элемента
+        int current = list->head;
+        while (list->nodes[current].next != -1) {
+            current = list->nodes[current].next;
         }
-        
-        current = next;
+        list->nodes[current].next = new_index;
     }
-    
-    list->head = sorted;
+    list->size++;
 }
+
+
+// Рекурсивное удаление по ключу
+static void erase_recursive(udt *list, int current, int prev, int key) {
+    if (current == -1) return;
+
+    if (list->nodes[current].data.key == key) {
+        if (prev == -1) {
+            list->head = list->nodes[current].next;
+        } else {
+            list->nodes[prev].next = list->nodes[current].next;
+        }
+
+        // Возвращаем узел в список свободных
+        list->nodes[current].next = list->free_head;
+        list->free_head = current;
+        list->size--;
+        return;
+    }
+
+    erase_recursive(list, list->nodes[current].next, current, key);
+}
+
+void udt_erase(udt *list, const int key) {
+    erase_recursive(list, list->head, -1, key);
+}
+
+void udt_print(const udt *list){
+    if (is_empty(list)){
+        printf("Empty list\n");
+        return;
+    }
+    int current = list->head;
+    while (current != -1) {
+        printf("Ключ: %d, Значение: %d\n",
+               list->nodes[current].data.key,
+               list->nodes[current].data.value);
+        current = list->nodes[current].next;
+    }
+}
+
+size_t udt_size(const udt *list) {
+    return list->size;
+}
+

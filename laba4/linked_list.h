@@ -1,31 +1,53 @@
-#ifndef SINGLY_LINKED_LIST_H
-#define SINGLY_LINKED_LIST_H
+#ifndef __UDT_H__
+#define __UDT_H__
 
-#include <stdbool.h>  // Для типа bool
-#include <stddef.h>   // Для типа size_t
+#include <stdbool.h>
+#include <stddef.h>
 
-// Определение структуры узла списка
-typedef struct Node {
-    int data;
-    struct Node* next;
-} Node;
+#define MAX_CAPACITY 100 // Фиксированный размер массива
 
-// Определение структуры списка
+// Структура данных элемента
 typedef struct {
-    Node* head;
-} SinglyLinkedList;
+    int key;
+    int value;
+} data_type;
 
-// Операции над списком
-void list_create(SinglyLinkedList *);
-bool list_is_empty(const SinglyLinkedList *);
-void list_push_front(SinglyLinkedList *, int);
-void list_push_back(SinglyLinkedList *, int);
-void list_pop_front(SinglyLinkedList *);
-void list_pop_back(SinglyLinkedList *);
-void list_print(const SinglyLinkedList *);
-size_t list_size(const SinglyLinkedList *);
-void list_insert(SinglyLinkedList *, size_t, int);
-void list_erase(SinglyLinkedList *, size_t);
-void list_insertion_sort(SinglyLinkedList *list);
+// Узел списка (хранится в массиве)
+typedef struct {
+    data_type data;
+    int next; // Индекс следующего элемента
+} list_node;
 
-#endif // SINGLY_LINKED_LIST_H
+// Основная структура списка
+typedef struct {
+    list_node nodes[MAX_CAPACITY]; // Статический массив узлов
+    int head;                     // Индекс первого элемента основного списка
+    int free_head;                // Индекс первого свободного элемента
+    size_t size;                  // Текущий размер основного списка
+} udt;
+
+// Инициализация списка
+void udt_create(udt *list);
+
+// Проверка на пустоту
+bool udt_is_empty(const udt *list);
+
+// Добавление в начало
+void udt_push_front(udt *list, data_type data);
+
+// Удаление по ключу (рекурсивная реализация)
+void udt_erase(udt *list, const int key);
+
+// Вывод списка
+void udt_print(const udt *list);
+
+// Получение размера
+size_t udt_size(const udt *list);
+
+// Другие функции (реализация в .c файле)
+void udt_push_back(udt *list, data_type data);
+void udt_pop_front(udt *list);
+void udt_pop_back(udt *list);
+void udt_insert(udt *list, const data_type data);
+
+#endif
