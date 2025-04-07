@@ -1,30 +1,29 @@
-#ifndef __list_H__
-#define __list_H__
+#ifndef __STATIC_LIST_H__
+#define __STATIC_LIST_H__
 
-struct node {
-    int value;
-    struct node *next;
-};
-typedef struct node node;
+#define MAX_SIZE 100
+#define STRING_LENGTH 50
 
-struct list {
-    node *header;
+typedef int key_type;
+typedef char value_type[STRING_LENGTH];
+
+typedef struct {
+    key_type key;
+    value_type value;
+} data_type;
+
+typedef struct {
+    data_type data[MAX_SIZE];
     int size;
-};
-typedef struct list list;
+} StaticList;
 
-void init_list(list *cur_list);
-int empty(list *cur_list);
-node *find_by_index(node *cur, int need_ind);
-void push(list *cur_list, int val, int ind);
-void pop_front(list *cur_list);
-void pop_back(list *cur_list);
-void pop_by_ind(list *cur_list, int ind);
-int size(list *cur_list);
-void el_by_ind(list *cur_list, int ind);
-void clear(list *cur_list);
-void print_list(list *cur_list);
-int size(list *cur_list);
-void insertion_sort(list *cur_list);
+void init_list(StaticList *list);
+int empty(const StaticList *list);
+void insert(StaticList *list, key_type key, const char *value, int index);
+void erase(StaticList *list, int index);
+void print_list(const StaticList *list);
+void clear_list(StaticList *list);
+int find_first_unsorted(const StaticList *list, int start);
+void move_element(StaticList *list, int from_index);
 
 #endif

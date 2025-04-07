@@ -1,78 +1,57 @@
 #include "linked_list.h"
 #include <stdio.h>
 
-void display_menu() {
+void insertion_sort(StaticList *list);
+
+void showMenu() {
     printf("\nМеню:\n");
-    printf("1. Добавить элемент в начало\n");
-    printf("2. Добавить элемент в конец\n");
-    printf("3. Добавить элемент по индексу\n");
-    printf("4. Удалить первый элемент\n");
-    printf("5. Удалить последний элемент\n");
-    printf("6. Удалить элемент по индексу\n");
-    printf("7. Вывести список\n");
-    printf("8. Отсортировать список\n");
-    printf("9. Выход\n");
+    printf("1. Добавить элемент по индексу\n");
+    printf("2. Удалить элемент по индексу\n");
+    printf("3. Вывести список\n");
+    printf("4. Отсортировать список\n");
+    printf("5. Выход\n");
     printf("Выберите действие: ");
 }
 
 int main() {
-    list our_list;
-    init_list(&our_list);
+    StaticList myList;
+    init_list(&myList);
 
-    int choice, val, ind;
+    int option, key, index;
+    char value[STRING_LENGTH];
 
     while (1) {
-        display_menu();
-        if (scanf("%d", &choice) != 1) break;
-
-        switch (choice) {
+        showMenu();
+        if (scanf("%d", &option) != 1) break;
+        switch (option) {
             case 1:
-                printf("Введите значение: ");
-                scanf("%d", &val);
-                push(&our_list, val, 0);
-                print_list(&our_list);
+                printf("Введите ключ, значение и индекс: ");
+                scanf("%d %s %d", &key, value, &index);
+                insert(&myList, key, value, index);
+                print_list(&myList);
                 break;
             case 2:
-                printf("Введите значение: ");
-                scanf("%d", &val);
-                push(&our_list, val, size(&our_list)); // Корректно, так как индексы от 0 до size
-                print_list(&our_list);
+                printf("Введите индекс для удаления: ");
+                scanf("%d", &index);
+                erase(&myList, index);
+                print_list(&myList);
                 break;
-            case 3: // Добавить по индексу
-                printf("Введите значение и индекс: ");
-                scanf("%d %d", &val, &ind);
-                push(&our_list, val, ind);
-                print_list(&our_list);
+            case 3:
+                print_list(&myList);
                 break;
             case 4:
-                pop_front(&our_list);
-                print_list(&our_list);
+
+                insertion_sort(&myList);
+                print_list(&myList);
                 break;
             case 5:
-                pop_back(&our_list);
-                print_list(&our_list);
-                break;
-            case 6:
-                printf("Введите индекс: ");
-                scanf("%d", &ind);
-                pop_by_ind(&our_list, ind);
-                print_list(&our_list);
-                break;
-            case 7:
-                print_list(&our_list);
-                break;
-            case 8:
-                insertion_sort(&our_list);
-                break;
-            case 9:
-                clear(&our_list);
+                clear_list(&myList);
                 return 0;
                 break;
             default:
                 printf("Неверный выбор!\n");
         }
     }
-
-    clear(&our_list);
+    clear_list(&myList);
     return 0;
 }
