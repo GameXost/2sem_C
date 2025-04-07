@@ -1,80 +1,78 @@
 #include "linked_list.h"
 #include <stdio.h>
-#include <stdlib.h>
 
-void print_menu() {
+void display_menu() {
     printf("\nМеню:\n");
     printf("1. Добавить элемент в начало\n");
     printf("2. Добавить элемент в конец\n");
-    printf("3. Удалить первый элемент\n");
-    printf("4. Удалить последний элемент\n");
-    printf("5. Вставить элемент по индексу\n");
+    printf("3. Добавить элемент по индексу\n");
+    printf("4. Удалить первый элемент\n");
+    printf("5. Удалить последний элемент\n");
     printf("6. Удалить элемент по индексу\n");
     printf("7. Вывести список\n");
-    printf("8. Вывести размер списка\n");
-    printf("9. Отсортировать список\n");
-    printf("0. Выход\n");
+    printf("8. Отсортировать список\n");
+    printf("9. Выход\n");
     printf("Выберите действие: ");
 }
 
 int main() {
-    ArrayList list;
-    list_create(&list, 4);  // Начальная вместимость
+    list our_list;
+    init_list(&our_list);
 
-    int choice, key, value;
-    size_t index;  // index типа size_t для обеспечения корректности индекса
+    int choice, val, ind;
 
     while (1) {
-        print_menu();
-        scanf("%d", &choice);
+        display_menu();
+        if (scanf("%d", &choice) != 1) break;
 
         switch (choice) {
             case 1:
-                printf("Введите ключ и значение: ");
-                scanf("%d %d", &key, &value);
-                list_push_front(&list, key, value);
+                printf("Введите значение: ");
+                scanf("%d", &val);
+                push(&our_list, val, 0);
+                print_list(&our_list);
                 break;
             case 2:
-                printf("Введите ключ и значение: ");
-                scanf("%d %d", &key, &value);
-                list_push_back(&list, key);
-            case 3:
-                list_pop_front(&list);
+                printf("Введите значение: ");
+                scanf("%d", &val);
+                push(&our_list, val, size(&our_list)); // Корректно, так как индексы от 0 до size
+                print_list(&our_list);
+                break;
+            case 3: // Добавить по индексу
+                printf("Введите значение и индекс: ");
+                scanf("%d %d", &val, &ind);
+                push(&our_list, val, ind);
+                print_list(&our_list);
                 break;
             case 4:
-                list_pop_back(&list);
+                pop_front(&our_list);
+                print_list(&our_list);
                 break;
             case 5:
-                printf("Введите индекс, ключ и значение: ");
-                scanf("%zu %d %d", &index, &key, &value);  // %zu для size_t
-                if (index > list_size(&list)) {  // index не должен превышать текущий размер списка
-                    printf("Ошибка: некорректный индекс!\n");
-                } else {
-                    list_insert(&list, index, key, value);
-                }
+                pop_back(&our_list);
+                print_list(&our_list);
                 break;
             case 6:
                 printf("Введите индекс: ");
-                scanf("%zu", &index);  // %zu для size_t
-                if (index >= list_size(&list)) {
-                    printf("Ошибка: некорректный индекс!\n");
-                } else {
-                    list_erase(&list, index);
-                }
+                scanf("%d", &ind);
+                pop_by_ind(&our_list, ind);
+                print_list(&our_list);
                 break;
             case 7:
-                list_print(&list);
+                print_list(&our_list);
                 break;
             case 8:
-                printf("Размер списка: %zu\n", list_size(&list));
+                insertion_sort(&our_list);
                 break;
             case 9:
-
-            case 0:
-                list_destroy(&list);
+                clear(&our_list);
                 return 0;
+                break;
             default:
-                printf("Некорректный ввод, попробуйте снова.\n");
+                printf("Неверный выбор!\n");
         }
     }
+
+    clear(&our_list);
+    return 0;
 }

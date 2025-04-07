@@ -1,53 +1,30 @@
-#ifndef __UDT_H__
-#define __UDT_H__
+#ifndef __list_H__
+#define __list_H__
 
-#include <stdbool.h>
-#include <stddef.h>
-
-#define MAX_CAPACITY 100 // Фиксированный размер массива
-
-// Структура данных элемента
-typedef struct {
-    int key;
+struct node {
     int value;
-} data_type;
+    struct node *next;
+};
+typedef struct node node;
 
-// Узел списка (хранится в массиве)
-typedef struct {
-    data_type data;
-    int next; // Индекс следующего элемента
-} list_node;
+struct list {
+    node *header;
+    int size;
+};
+typedef struct list list;
 
-// Основная структура списка
-typedef struct {
-    list_node nodes[MAX_CAPACITY]; // Статический массив узлов
-    int head;                     // Индекс первого элемента основного списка
-    int free_head;                // Индекс первого свободного элемента
-    size_t size;                  // Текущий размер основного списка
-} udt;
-
-// Инициализация списка
-void udt_create(udt *list);
-
-// Проверка на пустоту
-bool udt_is_empty(const udt *list);
-
-// Добавление в начало
-void udt_push_front(udt *list, data_type data);
-
-// Удаление по ключу (рекурсивная реализация)
-void udt_erase(udt *list, const int key);
-
-// Вывод списка
-void udt_print(const udt *list);
-
-// Получение размера
-size_t udt_size(const udt *list);
-
-// Другие функции (реализация в .c файле)
-void udt_push_back(udt *list, data_type data);
-void udt_pop_front(udt *list);
-void udt_pop_back(udt *list);
-void udt_insert(udt *list, const data_type data);
+void init_list(list *cur_list);
+int empty(list *cur_list);
+node *find_by_index(node *cur, int need_ind);
+void push(list *cur_list, int val, int ind);
+void pop_front(list *cur_list);
+void pop_back(list *cur_list);
+void pop_by_ind(list *cur_list, int ind);
+int size(list *cur_list);
+void el_by_ind(list *cur_list, int ind);
+void clear(list *cur_list);
+void print_list(list *cur_list);
+int size(list *cur_list);
+void insertion_sort(list *cur_list);
 
 #endif
