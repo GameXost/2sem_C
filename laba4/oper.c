@@ -51,15 +51,18 @@ int find_first_unsorted(const StaticList *list, int start) {
     }
     return -1;
 }
+data_type get_element(const StaticList *list, int index) {
+    return list->data[index];
+}
 
 void move_element(StaticList *list, int from_index) {
-    data_type temp = list->data[from_index];
-    int j = from_index - 1;
-    while (j >= 0 && list->data[j].key > temp.key) {
-        list->data[j + 1] = list->data[j];
-        j--;
+    data_type temp = get_element(list, from_index);
+    erase(list, from_index);
+    int pos = 0;
+    while (pos < list->size && get_element(list, pos).key <= temp.key) {
+        pos++;
     }
-    list->data[j + 1] = temp;
+    insert(list, temp.key, temp.value, pos);
 }
 
 void insertion_sort(StaticList *list) {

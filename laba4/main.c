@@ -7,9 +7,8 @@ void showMenu() {
     printf("\nМеню:\n");
     printf("1. Добавить элемент по индексу\n");
     printf("2. Удалить элемент по индексу\n");
-    printf("3. Вывести список\n");
-    printf("4. Отсортировать список\n");
-    printf("5. Выход\n");
+    printf("3. Отсортировать список\n");
+    printf("4. Выход\n");
     printf("Выберите действие: ");
 }
 
@@ -36,15 +35,13 @@ int main() {
                 erase(&myList, index);
                 print_list(&myList);
                 break;
+
             case 3:
-                print_list(&myList);
-                break;
-            case 4:
 
                 insertion_sort(&myList);
                 print_list(&myList);
                 break;
-            case 5:
+            case 4:
                 clear_list(&myList);
                 return 0;
                 break;
